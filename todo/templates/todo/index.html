@@ -1,0 +1,45 @@
+{% extends 'todo/layout.html' %}
+
+{% block content %}
+
+<div style="margin-top: 50px;" class="ui container">
+
+    <h1 class="ui center aligned header green">{{ app_name }}</h1>
+
+    <form class="ui form" action="{{ url_for('add') }}" method="post">
+        <h3 class="ui header">Добавляй новые задачи</h3>
+        <div class="field">
+            <label>Новая задача</label>
+            <input type="text" name="title" placeholder="Введите название задачи"><br>
+        </div>
+        <button class="ui teal basic button" type="submit">Добавить</button>
+    </form>
+
+    {% for todo in todo_list %}
+    <div class="ui segment">
+        <p class="ui big header">№{{ todo.id }} {{ todo.title }}</p>
+
+        {% if todo.is_complete == False %}
+        {% if todo.is_in_progress %}
+        <span class="ui orange label">В работе</span>
+        {% else %}
+        <span class="ui gray label">В ожидании</span>
+        {% endif %}
+        <a class="ui primary basic button" href="{{ url_for('update', todo_id=todo.id) }}">Выполнено</a>
+        <a class="ui yellow basic button" href="{{ url_for('toggle_progress', todo_id=todo.id) }}">
+            {% if todo.is_in_progress %}
+            Остановить
+            {% else %}
+            В работе
+            {% endif %}
+        </a>
+        {% else %}
+        <span class="ui green label">Завершено</span>
+        <a class="ui blue button" href="{{ url_for('update', todo_id=todo.id) }}">Возобновить</a>
+        {% endif %}
+        <a class="ui negative basic button" href="{{ url_for('delete', todo_id=todo.id) }}">Удалить</a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}
